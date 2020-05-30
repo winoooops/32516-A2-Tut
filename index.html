@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Herts-Rental</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg" style="background-color: #90ee90 ;">
+            <a class="navbar-brand" href="./index.html">Herts-Cars</a>
+            <button class="btn btn-outline-success" type="button" data-toggle="collapse" data-target="#NavList" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="NavList">
+              <div class="navbar-nav">
+                <a class="nav-item nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" href="#">Pricing</a>
+                <a class="nav-item nav-link" href="./book.html">My Book</a>
+              </div>
+            </div>
+          </nav>
+    </header>
+    <div class="container">
+
+    </div>
+    
+    <footer class="footer fixed-bottom" style="background-color: #f1dabb;">
+        <div class="row">
+            <div class="col-md-2">
+                <h3>HertzUTS</h3>
+                <p>An dummpy website for IP Assignment 2 </p>
+            </div>
+            <div class="col-md-6">
+                <h4>Useful Links</h4>
+                <ul>
+                <li><a href="#">Cars</a></li>
+                <li><a href="#">Service</a></li>
+                <li><a href="#">Terms & Agreement</a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+                <h4>Contact Us</h4>
+                <div class="social-links">
+                    <i class="fab fa-twitter"></i>
+                </div> 
+            </div>
+        </div>
+    </footer>
+
+
+   
+    <!-- <p>hello suv</p> -->
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        var handleCarInfo = function(car, area) {
+            //
+            $card = $("<div></div>", { class: 'card col-md-4'})
+            $cardBody = $('<div></div>', { class: 'card-body'})
+            
+            $cardBody.append(`<h2 class="card-title">${car.model}</h2>`)
+            $cardBody.append(`<img src="./img/${car.model}.jpg" style="width:200px;">`)
+            $cardBody.append(`<br/ ><p class="card-text"><b>description:</b> ${car.description}</p>`)
+            $cardBody.append(`<p class="card-text"><b>price</b> ${car.price_p_day}</p>`)
+            $cardBody.append(`<p class="card-text"><b>seats:</b> ${car.seats}</p>`)
+            // $cardBody.append(`<p class="card-text"><b>mileage:</b> ${car.mileage}</p>`)
+            // $cardBody.append(`<p class="card-text"><b>fuel_type:</b> ${car.fuel_type}</p>`)
+            
+            if(car.availability=="y") {
+                $cardBody.append(`<a href="./detail.html?car=${car.model}" class="btn btn-primary" carInfo>Details</a>`)
+            } else {
+                $cardBody.append("<p>Sorry, this car has been reserved.</p>")
+            }
+            // $cardBody.append(`<p class="card-text"><b>availability:</b> ${car.availability}</p>`)
+            $card.append($cardBody)
+            area.append($card)
+
+        }
+        
+        
+        
+        
+        $(document).ready(function(){
+            mylist = []
+            $.ajax({
+                type:"GET", 
+                url: "./models/cars.xml",
+                success: function(res){
+                    // 收到并返回请求
+                    carList = { }
+                    var cars = res.getElementsByTagName("car")
+                    for( i = 0; i < cars.length ; i++) {
+                        var category = cars[i].getElementsByTagName("catagory")[0].innerHTML
+                        var availability = cars[i].getElementsByTagName("availability")[0].innerHTML
+                        var brand = cars[i].getElementsByTagName("brand")[0].innerHTML
+                        var model = cars[i].getElementsByTagName("model")[0].innerHTML
+                        var model_year = cars[i].getElementsByTagName("model_year")[0].innerHTML
+                        var mileage = cars[i].getElementsByTagName("mileage")[0].innerHTML
+                        var fuel_type = cars[i].getElementsByTagName("fuel_type")[0].innerHTML
+                        var seats = cars[i].getElementsByTagName("seats")[0].innerHTML
+                        var price_p_day = cars[i].getElementsByTagName("price_p_day")[0].innerHTML
+                        var description = cars[i].getElementsByTagName("description")[0].innerHTML
+                        carList[model] = {
+                            category,
+                            availability,
+                            brand,
+                            model,
+                            model_year,
+                            mileage,
+                            fuel_type,
+                            seats,
+                            price_p_day, 
+                            description
+                        }
+                    }
+
+                    
+                    sessionStorage.setItem("Herts",JSON.stringify(carList) )
+                    // carList["Captiva"]
+                    var i = 0 
+                    var carKeys = Object.keys(carList) 
+                    // ["Captiva", "Civig", "GLC", "Golf"]
+                    carKeys.forEach( function(key) {
+                        if(i == 0 || i % 3 == 0) {
+                            $row = $('<div></div>', { class: "row"})
+                            $('.container').append($row)
+                        }
+                        var rowToAppend = $('.container').children().last()
+                        handleCarInfo(carList[key], rowToAppend)
+                        i++
+                    })
+                }, 
+                error:function(err){
+                    // xml地址错误
+                    // 请求不存在
+                    // 。。。
+                    console.error(err)
+                }
+            })
+        })
+
+        
+    </script>
+</body>
+</html>
