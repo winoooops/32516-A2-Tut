@@ -67,16 +67,15 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
-        if(!sessionStorage.getItem('order')) {
-            //do something here
-        } else {
-            var bookedCars = JSON.parse(sessionStorage.getItem('order'))
-        }        
-        var $listTable = $('#list')
-        if(!bookedCars || bookedCars.length == 0 ) {
+        if(!sessionStorage.getItem('order') || sessionStorage.getItem('order')=="{}" ) {
             alert("No car has been reserved")
             window.location.href = "index.html"
         }
+       
+        var bookedCars = JSON.parse(sessionStorage.getItem('order'))
+          
+        var $listTable = $('#list')
+        
         var keys = Object.keys(bookedCars)
         keys.forEach( function(key,idx) {
             console.log( bookedCars[key])
@@ -118,14 +117,9 @@
         }
 
         var deleteHandler = function(model) {
-            bookedCars.forEach( function(car, idx) {
-                if(car.model == model ) {
-                    bookedCars.splice(idx,1)
-                    sessionStorage.setItem("order", JSON.stringify(bookedCars))
-                    location.reload() 
-
-                }
-            })
+            delete bookedCars[model]
+            sessionStorage.setItem('order',JSON.stringify(bookedCars))
+            location.reload()
         }
 
         $('[data-car="carsForm"]').on('input', function(e) {
